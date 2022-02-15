@@ -2,8 +2,6 @@
 #include <string>
 #include <Windows.h>
 
-//мю дме йюфднцн яепджю еярэ няюднй
-
 constexpr auto N = 6;
 
 const char POLYBIUS[N][N] = {

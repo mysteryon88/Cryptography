@@ -1,29 +1,31 @@
 ﻿#include "RSA.h"
-
+#include <iostream>
+#include <fstream>
+#include <random>
 #include <iterator>
 
+#define START_LEN 100
+
 RSA::RSA() {
-	privat_key.exp = 0ull;
-	privat_key.modulus = 0ull;
-	public_key.exp = 0ull;
-	public_key.modulus = 0ull;
+	open_exp = 0ull;
+	secret_exp = 0ull;
+	modulus = 0ull;
 }
 
 RSA::~RSA() {}
 
 void RSA::GenerateKey() {
-	uint64_t p = 0ull, q = 0ull;
-	uint64_t modulus = 0ull, euler = 0ull, open_exp = 0ull, secret_exp = 0ull;
+	uint64_t p = 0ull, q = 0ull, euler = 0ull;
 	std::random_device rd;
 	std::mt19937 mersenne(rd()); // initialize the Mersenne Twister with a random starting number
 	//generate p
 	do {
-		p = 500ull + mersenne() % 2000;
+		p = 5000ull + mersenne() % 20000;
 		if (IsPrime(p)) break;
 	} while (true);
 	//generate q
 	do {
-		q = 500ull + mersenne() % 2000;
+		q = 5000ull + mersenne() % 20000;
 		if (q != p && IsPrime(q)) break;
 	} while (true);
 
@@ -31,61 +33,55 @@ void RSA::GenerateKey() {
 	//q = 2579;
 	//Their product n = p*q is calculated, which is called the modulus.
 	modulus = p * q;
-	public_key.modulus = modulus;
-	privat_key.modulus = modulus;
 
 	//The value of the Euler function from the number n is calculated: φ(n) = (p−1)⋅(q−1)
 	euler = (p - 1) * (q - 1);
 
 	//An integer e ( 1 < e < φ(n) ) is chosen, coprime with the value of the Euler function (t)
 	//open exhibitor
-	public_key.exp = CalculateE(euler);			        //e
+	open_exp = CalculateE(euler);			  //e
 
-	privat_key.exp = CalculateD(public_key.exp, euler); //d
+	secret_exp = CalculateD(open_exp, euler); //d
 
 	//writing to file
 	std::ofstream public_file;
 	public_file.open("public.key");
 	if (public_file.is_open()) 
-		public_file << public_key.exp << " " << public_key.modulus;
+		public_file << open_exp << " " << modulus;
 	public_file.close();
 
 	//writing to file
 	std::ofstream privat_file;
 	privat_file.open("privat.key");
 	if (privat_file.is_open())
-		privat_file << privat_key.exp << " " << privat_key.modulus;
+		privat_file << secret_exp << " " << modulus;
 	privat_file.close();
 
-	//Пара {e, n} публикуется в качестве открытого ключа RSA
-	std::cout << "\nRSA public key is (n = " << public_key.modulus << ", e = " << public_key.exp << ")" << std::endl;
-
-	//Пара {d, n} играет роль закрытого ключа RSA и держится в секрете
-	std::cout << "RSA private key is (n = " << privat_key.modulus << ", d = " << privat_key.exp << ")" << std::endl;
-
-	Encrypt("23");
+	std::cout << "\nRSA public key is (n = " << modulus << ", e = " << open_exp << ")" << std::endl;
+	std::cout << "RSA private key is (n = " << modulus << ", d = " << secret_exp << ")" << std::endl;
+	std::cout << "\"private.key\" and \"public.key\" files were created" << std::endl;
 }
 
 //miller-rabin test (start)
 
-bool RSA::IsPrime(uint64_t n, unsigned short iter) {
+bool RSA::IsPrime(uint64_t n, uint16_t iter) {
 	if (n < 4) return n == 2 || n == 3;
 
-	unsigned short s = 0;
+	uint16_t s = 0;
 	uint64_t d = n - 1;
 	while ((d & 1) == 0) {
 		d >>= 1;
 		s++;
 	}
-	for (unsigned short i = 0; i < iter; i++) {
-		int a = 2 + rand() % (n - 3);
+	for (uint16_t i = 0; i < iter; i++) {
+		uint32_t a = 2 + rand() % (n - 3);
 		if (CheckComposite(n, a, d, s))
 			return false;
 	}
 	return true;
 }
 
-bool RSA::CheckComposite(uint64_t n, uint64_t a, uint64_t d, int s) {
+bool RSA::CheckComposite(uint64_t n, uint64_t a, uint64_t d, int32_t s) {
 	uint64_t x = Binpower(a, d, n);
 	if (x == 1 || x == n - 1)
 		return false;
@@ -119,7 +115,6 @@ uint64_t RSA::CalculateE(uint64_t t) {
 	for (e = 2; e < t; e++)
 		if (GreatestCommonDivisor(e, t) == 1) 
 			return e;
-
 	return -1;
 }
 
@@ -159,62 +154,63 @@ int64_t RSA::gcdex(int64_t a, int64_t b, int64_t& x, int64_t& y) {
 }
 //Calculate secret exponent (end)
 
-void RSA::Encrypt(std::string path)
-{	
-	std::string data_hash = "HEllo WOrld!";
-	/*
-	std::ifstream hash(path); // open file with hash
-	if (hash.is_open()) {
-		//while (getline(hash, data_hash)); 
-		getline(hash, data_hash);
-	}
-	hash.close();
-	*/
+void RSA::Encrypt(std::string message) {
 	
-	std::vector<uint64_t> encrypt_hash(data_hash.length());
-	
-	for(size_t i = 0; i < data_hash.length(); ++i)
-		encrypt_hash[i] = Binpower((uint16_t)data_hash[i], public_key.exp, public_key.modulus);
+	std::vector<uint64_t> encrypt_file(message.length());
 
+	for(size_t i = 0; i < message.length(); ++i)
+		encrypt_file[i] = Binpower(message[i], secret_exp, modulus);
+	
 	std::ofstream encrypted;
-	encrypted.open("signed file.enc");
+	encrypted.open("file.enc");
 	if (encrypted.is_open())
-		std::copy(encrypt_hash.begin(), encrypt_hash.end(), std::ostream_iterator<uint64_t>(encrypted, " "));
+		std::copy(encrypt_file.begin(), encrypt_file.end(), std::ostream_iterator<uint64_t>(encrypted, " "));
 	encrypted.close();
 
-	//-----
-
-	//std::copy(encrypt_hash.begin(), encrypt_hash.end(), std::ostream_iterator<uint64_t>(std::cout, " "));
-	//std::cout << "\n";
-
-	Decipher("signed file.enc");
+	std::cout << "Encrypted message saved in \"file.enc\"" << std::endl;
 }
 
 void RSA::Decipher(std::string path) {
-	//path = signed file.enc
-	std::ifstream encrypted(path); // open file with encrypted hash
-	std::vector<uint64_t> encrypted_hash(100); //-----------------------------------не забыть про размер хэша
-	if (encrypted.is_open()) {
-		size_t i = 0;
+	
+	std::ifstream encrypted(path); 
+	std::vector<uint64_t> encrypted_message(START_LEN);
+	
+	int32_t i = 0;
+	if (encrypted.is_open()) 
 		while (!encrypted.eof()) {
-			encrypted >> encrypted_hash[i];
+			encrypted >> encrypted_message[i];
 			i++;
+			if (i >= encrypted_message.size()) encrypted_message.resize(i+1);
 		}
-	}
+	else std::cout << "Encrypted message file not opened" << std::endl;
 	encrypted.close();
+	encrypted_message.resize(i);
 
-	//hash decryption
-	std::vector<uint8_t> decrypted_hash(encrypted_hash.size());
+	std::vector<uint8_t> decrypted_message(encrypted_message.size());
 
-	for (size_t i = 0; i < encrypted_hash.size(); ++i)
-		decrypted_hash[i] = Binpower(encrypted_hash[i], privat_key.exp, privat_key.modulus);
-
-	//write hash to file for comparison
-	std::ofstream decrypted;
-	decrypted.open("decrypted.hash");
-	if (decrypted.is_open())
-		std::copy(decrypted_hash.begin(), decrypted_hash.end(), std::ostream_iterator<uint8_t>(decrypted));
-	decrypted.close();
-
-	std::copy(decrypted_hash.begin(), decrypted_hash.end(), std::ostream_iterator<uint8_t>(std::cout));
+	for (size_t i = 0; i < encrypted_message.size(); ++i)
+		decrypted_message[i] = Binpower(encrypted_message[i], open_exp, modulus);
+	std::cout << "Decrypted message:" << std::endl;
+	std::copy(decrypted_message.begin(), decrypted_message.end(), std::ostream_iterator<uint8_t>(std::cout));
 }
+
+void RSA::LoadMyKey(std::string pub_key, std::string priv_key) {
+
+	std::ifstream pub(pub_key);
+
+	if (pub.is_open())
+		pub >> open_exp >> modulus;
+	pub.close();
+
+	std::ifstream priv(priv_key);
+
+	if (priv.is_open())
+		priv >> secret_exp >> modulus;
+	priv.close();
+
+	std::cout << "\nRSA public key is (n = " << modulus << ", e = " << open_exp << ")" << std::endl;
+
+	std::cout << "RSA private key is (n = " << modulus << ", d = " << secret_exp << ")" << std::endl;
+	std::cout << "Keys have been uploaded" << std::endl;
+}
+

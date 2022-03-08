@@ -9,6 +9,7 @@ private:
 	uint64_t A_B, p, g;
 	uint64_t a_b, key;
 	*/
+	uint64_t key;
 	//Greatest Common Divisor (Euclid's algorithm)
 	uint64_t GCD(uint64_t a, uint64_t b);
 	//Ferma
@@ -20,8 +21,9 @@ public:
 	void Initiate();
 	void InitiateKey();
 	void Receiving();
+	uint64_t GetKey();
 	uint64_t A_B, p, g;
-	uint64_t a_b, key;
+	uint64_t a_b;
 	DH();
 	~DH();
 };

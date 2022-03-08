@@ -60,7 +60,7 @@ void DH::Initiate() {
 
 	do {
 		//pub
-		p = 10000ull + mersenne() % 200000ull; //-------------------------------------------
+		p = 1000000ull + mersenne() % 90000000ull; //-------------------------------------------
 
 		if (IsPrime(p)) {
 			//check for a simple reliable number
@@ -79,11 +79,10 @@ void DH::Initiate() {
 		if (g % 2 == 1) g++;
 	}
 	std::cout << "g " << g << std::endl;
-	do {
-		//priv
-		a_b = 10000ull + mersenne() % 200000ull; //-------------------------------------------
-		if (IsPrime(a_b)) break;
-	} while (true);
+	
+	//priv
+	a_b = 1000000ull + mersenne() % 90000000ull; //-------------------------------------------
+
 
 	//pub
 	A_B = Binpower(g, a_b, p); //pub
@@ -100,11 +99,8 @@ void DH::Receiving(){
 
 	if (A_B == 1) return; //vulnerability replace A/B with 1
 
-	do {
-		//priv
-		a_b = 10000ull + mersenne() % 200000ull; //-------------------------------------------
-		if (IsPrime(a_b)) break;
-	} while (true);
+	//priv
+	a_b = 1000000ull + mersenne() % 90000000ull; //-------------------------------------------
 
 	key = Binpower(A_B, a_b, p); //priv
 
@@ -117,4 +113,8 @@ void DH::InitiateKey() {
 	//received from the interlocutor
 	if (A_B == 1) return; //vulnerability replace A/B with 1
 		key = Binpower(A_B, a_b, p);
+}
+
+uint64_t DH::GetKey() {
+	return key;
 }

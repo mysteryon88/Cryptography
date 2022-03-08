@@ -9,3 +9,6 @@ Implementation of a simple version of the RC4 algorithm, it is possible to gener
 
 ### Diffie-Hellman
 The simplest implementation of the diffie-hellman protocol, class fields should be private, but public for clarity
+
+### TinyHash
+A simple implementation of a hash function for another project, the hash can be generated in different lengths (HASH_LEN)

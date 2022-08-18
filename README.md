@@ -12,3 +12,6 @@ The simplest implementation of the diffie-hellman protocol, class fields should 
 
 ### TinyHash
 A simple implementation of a hash function for another project, the hash can be generated in different lengths (HASH_LEN)
+
+### Vigenère cipher
+My first golang program. Latin-only implementation of the Vigenère cipher.

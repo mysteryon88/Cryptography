@@ -1,7 +1,7 @@
 #include <iostream>
 #include "RSA.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     std::cout << "---------RSA---------\nEnter your message: ";
     std::string message;

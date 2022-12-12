@@ -2,11 +2,9 @@
 
 #include "Hash.h"
 
-int main(void) {
-
+int main(void)
+{
 	Hash h;
 	std::cout << h.GenerateHash(str) << std::endl;
-	
-    return 0;
+	return 0;
 }
-

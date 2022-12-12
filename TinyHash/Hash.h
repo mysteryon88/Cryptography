@@ -13,4 +13,3 @@ private:
 public:
 	std::string GenerateHash(std::string userString);
 };
-

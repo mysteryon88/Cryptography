@@ -15,3 +15,6 @@ A simple implementation of a hash function for another project, the hash can be 
 
 ### Vigenère cipher
 My first golang program. Latin-only implementation of the Vigenère cipher.
+
+### PS-network
+The algorithm encrypts pictures in size multiples of a power of two, you can adjust the number of rounds and block size

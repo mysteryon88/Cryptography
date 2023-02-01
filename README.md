@@ -18,3 +18,7 @@ My first golang program. Latin-only implementation of the Vigenère cipher.
 
 ### PS-network
 The algorithm encrypts pictures in size multiples of a power of two, you can adjust the number of rounds and block size
+
+### Elliptic Curve
+Elliptic Curve y^2 = x^3 - a*x + b where 4a^3 + 27b^2 != 0.
+Added Point addition and Scalar multiplication in R and GF

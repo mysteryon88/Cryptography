@@ -5,7 +5,7 @@ def L(u, n):
     return (u - 1)//(n)
     
 def encryption(g, m, r, n):
-    return pow(g,m,n*n) * pow(r, n, n*n) % (n*n)
+    return pow(g, m, n*n) * pow(r, n, n*n) % (n*n)
     
 def decryption(c, n, l, mu):
     return L(pow(c, l, n*n), n) * mu % n
@@ -25,40 +25,50 @@ def reciprocal(a, n):
     else:
         return(-1)
         
-def homomorphism(a, b, n, g, l, mu):
+def homomorphismSum(a, b):
+    n, g, l, mu = generateKey()
     # choose rand r
-    r = random.randint(0, n - 1)
-    while (math.gcd(r, n) != 1):
-        r = random.randint(0, n - 1)
-    a1 = encryption(g, a, r, n)
-    b1 = encryption(g, b, r, n)
+    ra = random.randint(0, n - 1)
+    while (math.gcd(ra, n) != 1):
+        ra = random.randint(0, n - 1)
+    rb = random.randint(0, n - 1)
+    while (math.gcd(rb, n) != 1):
+        rb = random.randint(0, n - 1)
+    print("ra =", ra)
+    print("rb =", rb)
+    a1 = encryption(g, a, ra, n)
+    b1 = encryption(g, b, rb, n)
+    
     # multiplying encrypted numbers is equal to adding unencrypted numbers
     s1 = (a1 * b1) % (n*n)
     s = decryption(s1, n, l, mu)
-    print(a, "+", b, "=", s)
+    if (s == (a + b)):
+        print(a, "+", b, "=", s)
+    else:
+        print("ERROR")
     
 def isPrime(x): 
     if (x == 2):
-        return(1)
+        return(True)
     i = 0
     while(i < 100):
-        a = random.randint(0, x - 2) + 2
+        a = random.randint(0, x)
         if (math.gcd(a, x) != 1):
-            return(0)
+            return(False)
         if (pow(a, x - 1, x) != 1):
-            return(0)
+            return(False)
         i += 1
-    return(1)
+    return(True)
     
-def main():
+def generateKey():
     while(True):
         # choose random options p and q
-        p = random.randint(0, 2000000)
-        while (isPrime(p) != 1):
-            p = random.randint(0, 2000000)
-        q = random.randint(0, 2000000)
+        p = random.randint(0, 20000)
+        while (isPrime(p) != True):
+            p = random.randint(0, 20000)
+        q = random.randint(0, 20000)
         while (isPrime(q) != 1):
-            q = random.randint(0, 2000000)
+            q = random.randint(0, 20000)
         n = p * q
         N = n * n
         f = (p - 1) * (q - 1)
@@ -72,19 +82,27 @@ def main():
     mu = reciprocal(L(pow(g, l, N), n), n) % n
     print("private key", n, g)
     print("public key", l, mu)
+    return n, g, l, mu
+    
+def main():
+    n, g, l, mu = generateKey()
     # random open text
-    m = random.randint(0, 2000000)
+    m = random.randint(0, 1000)
     print("open text", m)
     # choose rand r
     r = random.randint(0, n - 1)
     while (math.gcd(r, n) != 1):
         r = random.randint(0, n - 1)
+    print("r =", r)
     c = encryption(g, m, r, n)
     print("encrypted number", c)
     m1 = decryption(c, n, l, mu)
     if (m == m1):
-        print("decrypted number", m1)
+        print("decrypted number", m1, "\n")
+    else:
+        print("ERROR")
+        
     # testing of homomorphic properties of a cryptosystem
-    homomorphism(500, random.randint(10, 300), n, g, l, mu)
+    homomorphismSum(500, random.randint(10, 300))
     
 main()

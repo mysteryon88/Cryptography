@@ -29,11 +29,8 @@ def homomorphismSum(a, b):
     n, g, l, mu = generateKey()
     # choose rand r
     ra = random.randint(0, n - 1)
-    while (math.gcd(ra, n) != 1):
-        ra = random.randint(0, n - 1)
     rb = random.randint(0, n - 1)
-    while (math.gcd(rb, n) != 1):
-        rb = random.randint(0, n - 1)
+    
     print("ra =", ra)
     print("rb =", rb)
     a1 = encryption(g, a, ra, n)
@@ -45,7 +42,7 @@ def homomorphismSum(a, b):
     if (s == (a + b)):
         print(a, "+", b, "=", s)
     else:
-        print("ERROR")
+        print("ERROR\n")
     
 def isPrime(x): 
     if (x == 2):
@@ -90,9 +87,9 @@ def main():
     m = random.randint(0, 1000)
     print("open text", m)
     # choose rand r
+    #r = random.randint(0, n - 1)
+    #while (math.gcd(r, n) != 1):
     r = random.randint(0, n - 1)
-    while (math.gcd(r, n) != 1):
-        r = random.randint(0, n - 1)
     print("r =", r)
     c = encryption(g, m, r, n)
     print("encrypted number", c)
@@ -100,7 +97,7 @@ def main():
     if (m == m1):
         print("decrypted number", m1, "\n")
     else:
-        print("ERROR")
+        print("ERROR \n")
         
     # testing of homomorphic properties of a cryptosystem
     homomorphismSum(500, random.randint(10, 300))

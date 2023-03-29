@@ -40,7 +40,26 @@ def homomorphismSum(a, b):
     s1 = (a1 * b1) % (n*n)
     s = decryption(s1, n, l, mu)
     if (s == (a + b)):
-        print(a, "+", b, "=", s)
+        print(a, "+", b, "=", s, "\n")
+    else:
+        print("ERROR\n")
+        
+def homomorphismDiff(a, b):
+    n, g, l, mu = generateKey()
+    # choose rand r
+    ra = random.randint(0, n - 1)
+    rb = random.randint(0, n - 1)
+    b1 = n - b
+    print("ra =", ra)
+    print("rb =", rb)
+    a1 = encryption(g, a, ra, n)
+    b1 = encryption(g, b1, rb, n)
+    
+    # multiplying encrypted numbers is equal to adding unencrypted numbers
+    s1 = (a1 * b1) % (n*n)
+    s = decryption(s1, n, l, mu)
+    if (s == (a - b)):
+        print(a, "-", b, "=", s)
     else:
         print("ERROR\n")
     
@@ -101,5 +120,6 @@ def main():
         
     # testing of homomorphic properties of a cryptosystem
     homomorphismSum(500, random.randint(10, 300))
+    homomorphismDiff(500, random.randint(10, 300))
     
 main()

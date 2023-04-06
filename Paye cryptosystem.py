@@ -96,14 +96,15 @@ def generateKey():
     while (math.gcd(g, N) != 1):
         g = random.randint(0, N - 1)
     mu = reciprocal(L(pow(g, l, N), n), n) % n
-    print("private key", n, g)
-    print("public key", l, mu)
+    print("private key n =", n, "g =", g)
+    print("public key l =", l, "mu =", mu)
     return n, g, l, mu
     
 def main():
     n, g, l, mu = generateKey()
     # random open text
     m = random.randint(0, 1000)
+    m = 0
     print("open text", m)
     # choose rand r
     #r = random.randint(0, n - 1)

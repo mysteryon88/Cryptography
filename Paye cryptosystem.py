@@ -79,12 +79,12 @@ def isPrime(x):
 def generateKey():
     while(True):
         # choose random options p and q
-        p = random.randint(0, 20000)
+        p = random.randint(10000, 90000000)
         while (isPrime(p) != True):
-            p = random.randint(0, 20000)
-        q = random.randint(0, 20000)
+            p = random.randint(10000, 90000000)
+        q = random.randint(10000, 90000000)
         while (isPrime(q) != 1):
-            q = random.randint(0, 20000)
+            q = random.randint(10000, 90000000)
         n = p * q
         N = n * n
         f = (p - 1) * (q - 1)
@@ -99,7 +99,25 @@ def generateKey():
     print("private key n =", n, "g =", g)
     print("public key l =", l, "mu =", mu)
     return n, g, l, mu
-    
+
+def noiseTest():
+    n, g, l, mu = generateKey()
+    m = 1
+    total = 1
+    r = random.randint(0, n - 1)
+    c = encryption(g, m, r, n)
+    for i in range(10000):
+        total += i
+        r = random.randint(0, n - 1)
+        c1 = encryption(g, i, r, n)
+        c = (c * c1) % (n*n)
+    m1 = decryption(c, n, l, mu)
+    if (total == m1):
+        print("\nnoiseTest success")
+    else:
+        print("\nnoiseTest failed\n")
+    print("decrypted number", m1, "total", total, "\n")
+     
 def main():
     n, g, l, mu = generateKey()
     # random open text
@@ -107,8 +125,6 @@ def main():
     m = 0
     print("open text", m)
     # choose rand r
-    #r = random.randint(0, n - 1)
-    #while (math.gcd(r, n) != 1):
     r = random.randint(0, n - 1)
     print("r =", r)
     c = encryption(g, m, r, n)
@@ -122,5 +138,6 @@ def main():
     # testing of homomorphic properties of a cryptosystem
     homomorphismSum(500, random.randint(10, 300))
     homomorphismDiff(500, random.randint(10, 300))
+    noiseTest();
     
 main()

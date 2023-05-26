@@ -25,3 +25,6 @@ Added Point addition and Scalar multiplication in R and GF
 
 ### Paye cryptosystem
 Partially homomorphic cryptosystem
+
+### ECDSA
+Recovering a private key from an address that erred in creating a signature and reused the parameter k

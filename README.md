@@ -27,4 +27,4 @@ Added Point addition and Scalar multiplication in R and GF
 Partially homomorphic cryptosystem
 
 ### ECDSA
-Recovering a private key from an address that erred in creating a signature and reused the parameter k
+Recovering a private key from an address that erred in creating a signature and reused the parameter k + Create a signature

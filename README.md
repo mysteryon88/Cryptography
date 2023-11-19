@@ -42,3 +42,11 @@ Recovering a private key from an address that erred in creating a signature and 
 ### HMAC
 
 Simple implementations of two hash-based signature systems
+
+### NTRU
+
+Original file is located at [Google Colab](https://colab.research.google.com/drive/1A9jHs6AK6rOCLfmfLOJ9Bw4X6FPXXH79)
+
+Tutorial implementation of the NTRU algorithm (lattice based cryptography)
+
+Does not always decrypt, the problem is in the choice of the polynomial $r(x)$

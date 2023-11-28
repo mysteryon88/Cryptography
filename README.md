@@ -45,15 +45,11 @@ Simple implementations of two hash-based signature systems
 
 ### NTRU
 
-Original file is located at [Google Colab](https://colab.research.google.com/drive/1A9jHs6AK6rOCLfmfLOJ9Bw4X6FPXXH79)
-
 Tutorial implementation of the NTRU algorithm (lattice based cryptography)
 
 Does not always decrypt, the problem is in the choice of the polynomial $r(x)$
 
 ### Chaum-Pedersen
-
-Original file is located at [Google Colab](https://colab.research.google.com/drive/1GLOcfkduPRZfd34N-EO9iZIqBcaMK0Nl?usp=sharing)
 
 A simple implementation of the non-interactive Chaum-Pedersen protocol.
 

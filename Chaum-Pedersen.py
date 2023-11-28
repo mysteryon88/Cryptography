@@ -24,23 +24,27 @@ def calculate_hash(*args):
 
 g = 5
 h = 3
-p = find_large_prime(64)
+p = pow(2, 255)
 # secret
-x = find_large_prime(64)
+x = find_large_prime(16)
 
 Y = pow(g, x, p)
 Z = pow(h, x, p)
 
-k=find_large_prime(64)
+k = find_large_prime(16)
 
 # commitments
 A1 = pow(g, k, p)
 B1 = pow(h, k, p)
 
 # random oracle (non-interactive proofs)
-c1 = calculate_hash(Y, Z, A1, B1)
+c1 = str(Y) + str(Z) + str(A1) + str(B1)
+hash_1 = hashlib.sha256(c1.encode('utf-8'))  
+c1 = int.from_bytes(hash_1.digest(), 'little', signed='True')
 
 s = (k - c1 * x) % p
+
+# proof: (c1,s)
 
 if s < 0:
     val1 = gmpy2.powmod(g, -s, p)
@@ -60,14 +64,17 @@ else:
     val3 = gmpy2.powmod(Y, c1, p)
     val4 = gmpy2.powmod(Z, c1, p)
 
-# proof: (c,s)
-
 A2 = (val1 * val3) % p
 B2 = (val2 * val4) % p
 
-c2 = calculate_hash(Y, Z, A2, B2)
+c2 = str(Y) + str(Z) + str(A2) + str(B2)
+hash_2 = hashlib.sha256(c2.encode('utf-8'))  
+c2 = int.from_bytes(hash_2.digest(), 'little', signed='True')
 
 if c1 == c2:
     print("Proved!")
 else:
     print("Not Proved!")
+
+print(c1)
+print(c2)

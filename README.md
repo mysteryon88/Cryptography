@@ -56,3 +56,7 @@ A simple implementation of the non-interactive Chaum-Pedersen protocol.
 The protocol proves that two different discrete logarithms are equivalent without revealing the logarithms themselves:
 
 $log_g(p)=log_h(p)$
+
+### Shamir's secret sharing
+
+Realization of a threshold scheme for secret partitioning

@@ -31,7 +31,7 @@ The algorithm encrypts pictures in size multiples of a power of two, you can adj
 Elliptic Curve $y^2 = x^3 - a*x + b$ where $4a^3 + 27b^2≠0$.
 Added Point addition and Scalar multiplication in R and GF
 
-### Paye cryptosystem
+### Paillier cryptosystem
 
 Partially homomorphic cryptosystem
 

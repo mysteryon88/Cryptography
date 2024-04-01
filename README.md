@@ -60,3 +60,7 @@ $log_g(p)=log_h(p)$
 ### Shamir's secret sharing
 
 Realization of a threshold scheme for secret partitioning
+
+### Fiat-Shamir Protocol
+
+Implementing a zero-knowledge protocol in python and running 20 rounds.
